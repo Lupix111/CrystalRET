@@ -1,0 +1,12 @@
+# --- Gestione Audio e Segnale ---
+pyaudio             # Cattura l'audio live dal jack/scheda audio
+numpy               # Calcoli matematici per lo Squelch/VAD
+webrtcvad           # Voice Activity Detection (capisce quando qualcuno parla)
+pydub               # Manipolazione file audio (salvataggio log)
+
+# --- Intelligenza Artificiale ---
+faster-whisper      # Trascrizione ultra-veloce ottimizzata per NVIDIA
+ollama              # Client per comunicare con il modello Llama locale
+
+# --- Utility ---
+python-dotenv       # Per gestire eventuali chiavi o configurazioni
