@@ -1,5 +1,6 @@
 from faster_whisper import WhisperModel
 import os
+
 class STT():
     model_size = ""
     
