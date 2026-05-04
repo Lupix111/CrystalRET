@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1028</width>
-    <height>815</height>
+    <width>896</width>
+    <height>683</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,48 +19,75 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout_2">
-    <item row="1" column="2">
-     <widget class="QGroupBox" name="groupBox_4">
+    <item row="0" column="0" colspan="3">
+     <widget class="QGroupBox" name="groupBoxopzioni">
       <property name="title">
-       <string>Analisi AI</string>
+       <string>Opzioni</string>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout_2">
+      <layout class="QHBoxLayout" name="horizontalLayout_4">
        <item>
-        <widget class="QTextEdit" name="textEdit"/>
+        <widget class="QPushButton" name="pushButton_monitoraggio">
+         <property name="text">
+          <string>Monitoraggio</string>
+         </property>
+        </widget>
        </item>
        <item>
-        <widget class="QLabel" name="label">
+        <widget class="QPushButton" name="pushButton_pausa">
          <property name="text">
-          <string>TextLabel</string>
+          <string>Pausa</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_esportalog">
+         <property name="text">
+          <string>Esporta Log</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButton_impostazioni">
+         <property name="text">
+          <string>Impostazioni</string>
          </property>
         </widget>
        </item>
       </layout>
      </widget>
     </item>
-    <item row="2" column="0" colspan="3">
-     <widget class="QGroupBox" name="groupBox_5">
+    <item row="1" column="1">
+     <widget class="QGroupBox" name="groupBoxTrascrizioni">
       <property name="title">
-       <string>GroupBox</string>
+       <string>Log Trasmissioni</string>
       </property>
+      <layout class="QVBoxLayout" name="verticalLayout_3">
+       <item>
+        <widget class="QTableWidget" name="trascrizioni">
+         <property name="verticalScrollBarPolicy">
+          <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOn</enum>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </item>
     <item row="1" column="0">
-     <widget class="QGroupBox" name="groupBox_2">
+     <widget class="QGroupBox" name="groupBoxSegnaleStato">
       <property name="title">
        <string>Segnale e Stato</string>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout">
        <item>
-        <widget class="QGroupBox" name="groupBox_6">
+        <widget class="QGroupBox" name="groupBoxFreq">
          <property name="title">
           <string>Frequenza (MHz)</string>
          </property>
          <widget class="QLCDNumber" name="lcdFrequenza">
           <property name="geometry">
            <rect>
-            <x>40</x>
-            <y>30</y>
+            <x>20</x>
+            <y>10</y>
             <width>231</width>
             <height>81</height>
            </rect>
@@ -78,7 +105,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_7">
+        <widget class="QGroupBox" name="groupBoxAudioLev">
          <property name="title">
           <string>Livello Audio (dBFS)</string>
          </property>
@@ -94,7 +121,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_8">
+        <widget class="QGroupBox" name="groupBoxSquelch">
          <property name="title">
           <string>Squelch</string>
          </property>
@@ -127,27 +154,27 @@
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_9">
+        <widget class="QGroupBox" name="groupBoxStatusReg">
          <property name="title">
           <string>Status Registrazione</string>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="groupBox_10">
+        <widget class="QGroupBox" name="groupBoxSlider">
          <property name="title">
           <string>GroupBox</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
-           <widget class="QSlider" name="horizontalSlider">
+           <widget class="QSlider" name="horizontalSliderSquelch">
             <property name="orientation">
              <enum>Qt::Orientation::Horizontal</enum>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QSlider" name="horizontalSlider_2">
+           <widget class="QSlider" name="horizontalSliderSilenzioTime">
             <property name="orientation">
              <enum>Qt::Orientation::Horizontal</enum>
             </property>
@@ -159,49 +186,23 @@
       </layout>
      </widget>
     </item>
-    <item row="1" column="1">
-     <widget class="QGroupBox" name="groupBox_3">
+    <item row="1" column="2">
+     <widget class="QGroupBox" name="groupBoxAi">
       <property name="title">
-       <string>Log Trasmissioni</string>
+       <string>Analisi AI</string>
       </property>
-      <layout class="QVBoxLayout" name="verticalLayout_3">
+      <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <widget class="QTableWidget" name="tableWidget"/>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item row="0" column="0" colspan="3">
-     <widget class="QGroupBox" name="groupBox">
-      <property name="title">
-       <string>Opzioni</string>
-      </property>
-      <layout class="QHBoxLayout" name="horizontalLayout_4">
-       <item>
-        <widget class="QPushButton" name="pushButton_3">
-         <property name="text">
-          <string>Monitoraggio</string>
+        <widget class="QTextEdit" name="OllamaLog">
+         <property name="verticalScrollBarPolicy">
+          <enum>Qt::ScrollBarPolicy::ScrollBarAlwaysOn</enum>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="pushButton_4">
+        <widget class="QLabel" name="label">
          <property name="text">
-          <string>Pausa</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButton_2">
-         <property name="text">
-          <string>Esporta Log</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QPushButton" name="pushButton">
-         <property name="text">
-          <string>Impostazioni</string>
+          <string>TextLabel</string>
          </property>
         </widget>
        </item>

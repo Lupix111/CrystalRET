@@ -3,7 +3,7 @@ from pydub import AudioSegment
 import numpy as np
 import wave
 import time
-import STT
+from STT import STT
 import os
 
 class audioTrigger:
@@ -47,7 +47,7 @@ class audioTrigger:
             print(f"Rate non standard. Scegli tra: {standard_rates}")
     
     def setSquelch(self, valore):
-        """Imposta la sensibilità del volume per far scattare la registrazione"""
+        """imposta la sensibilità del volume per far scattare la registrazione"""
         try:
             v = float(valore)
             if v >= 0:
