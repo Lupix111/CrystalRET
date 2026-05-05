@@ -2,12 +2,10 @@ from faster_whisper import WhisperModel
 import os
 
 class STT:
-    model_size = ""
     
-    def STT():
-        def __init__(self):
-          self.model_size = "tiny"
-          model = WhisperModel(self.model_size, device="cuda", compute_type="int8_float16")
+    def __init__(self):
+        self.model_size = "tiny"
+        self.model = WhisperModel(self.model_size, device="cuda", compute_type="int8_float16")
 
     def setModel(self, modelSize):
         if modelSize in ["tiny","base","small","medium","large-v1","large-v2","large-v3","large-v3-turbo","distil-large-v2","distil-large-v3"]:

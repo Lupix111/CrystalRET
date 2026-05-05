@@ -21,7 +21,7 @@ class audioTrigger:
         self.buffer = [] # Qui accumuliamo i chunk durante la trasmissione
         self.is_recording = False
         self.silence_start_time = None
-        self.id_trasmissione = self._get_next_id() # ID iniziale
+        self.id_trasmissione = self.getNextId() # ID iniziale
         
         self.stream = self.p.open(
             format=self.FORMAT, channels=self.CHANNELS,
@@ -31,7 +31,7 @@ class audioTrigger:
     def setChunk(self, chunks):
         try:
             if chunks in [512, 1024, 2048, 4096]:
-                self.CHUNK==chunks
+                self.CHUNK=chunks
                 self._start_stream() # Necessario riavviare
         except:
             print("Usa una potenza di 2 standard (512, 1024, 2048)")        
@@ -41,7 +41,7 @@ class audioTrigger:
         standard_rates = [8000, 16000, 32000, 44100, 48000]
         if rate in standard_rates:
             self.RATE = rate
-            self._start_stream()
+            self._start_stream() #ANCORA DA DEFINIRE
             print(f"Sample Rate impostato a {rate}Hz")
         else:
             print(f"Rate non standard. Scegli tra: {standard_rates}")
@@ -68,7 +68,7 @@ class audioTrigger:
 
     def stopRecord(self):
         print(f"[ID {self.id_trasmissione:03d}] Fine trasmissione.")
-        self.salva_mp3()
+        self.salvaMp3()
         self.is_recording = False
         self.silence_start_time = None
 
@@ -106,7 +106,7 @@ class audioTrigger:
         self.id_trasmissione += 1
         self.buffer = [] # Svuota il buffer
 
-def ascolta(self):
+    def ascolta(self):
         print(f"Radio in ascolto (ID Corrente: {self.id_trasmissione:03d})...")
         try:
             while True:
