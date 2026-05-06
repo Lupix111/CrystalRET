@@ -35,7 +35,7 @@ class audioTrigger:
         try:
             if chunks in [512, 1024, 2048, 4096]:
                 self.CHUNK=chunks
-                self._start_stream() # Necessario riavviare
+                self.stream.start_stream() # Necessario riavviare #dovrebbe funzionare
         except:
             print("Usa una potenza di 2 standard (512, 1024, 2048)")        
     
@@ -44,7 +44,7 @@ class audioTrigger:
         standard_rates = [8000, 16000, 32000, 44100, 48000]
         if rate in standard_rates:
             self.RATE = rate
-            self._start_stream() #ANCORA DA DEFINIRE
+            self.stream.start_stream()  # Necessario riavviare #dovrebbe funzionare
             print(f"Sample Rate impostato a {rate}Hz")
         else:
             print(f"Rate non standard. Scegli tra: {standard_rates}")

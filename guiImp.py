@@ -92,7 +92,7 @@ class guiImp(QMainWindow, Ui_MainWindow):
 
     def _on_soglia_changed(self, valore):
         """Aggiorna la soglia squelch."""
-        self.controller.audio.setSquelch(valore)
+        self.controller.audio.setVadThreshold(valore / 100)
         self._update_status(f"Soglia squelch: {valore}")
 
     def _on_silenzio_changed(self, valore):
