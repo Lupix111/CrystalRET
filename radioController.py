@@ -40,8 +40,8 @@ class radioController:
     def setSilenzioPostTrasm(self, secondi):
         self.audio.setSilenzioPostTrasm(secondi)
 
+    def stopListen(self):
+        self.audio.stopListen()
     
-    
-
-
-        
+    def startListen(self):
+        self.audio.startListen()

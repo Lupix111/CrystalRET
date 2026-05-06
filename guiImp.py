@@ -3,6 +3,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QColor
 from ui_CrystalRET_UI import Ui_MainWindow
 import sys
+import os
 import datetime
 from radioController import radioController
 
@@ -56,22 +57,23 @@ class guiImp(QMainWindow, Ui_MainWindow):
 
     def _on_monitoraggio(self):
         """Avvia il monitoraggio radio."""
-        # TODO: self.controller.start()
+        self.controller.startListen()
         self._update_status("Monitoraggio avviato.")
         self.pushButton_monitoraggio.setEnabled(False)
         self.pushButton_pausa.setEnabled(True)
 
     def _on_pausa(self):
         """Mette in pausa il monitoraggio."""
-        # TODO: self.controller.stop()
-        self._update_status("Monitoraggio in pausa.")
+        self.controller.stopListen()
+        self._update_status("Monitoraggio fermato.")
         self.pushButton_monitoraggio.setEnabled(True)
         self.pushButton_pausa.setEnabled(False)
 
     def _on_esporta_log(self):
         """Esporta il log trascrizioni in un file di testo."""
+        os.makedirs("log_files", exist_ok=True)
         timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-        filename = f"log_{timestamp}.txt"
+        filename = os.path.join("log_files", f"log_{timestamp}.txt")
         with open(filename, "w", encoding="utf-8") as f:
             for row in range(self.trascrizioni.rowCount()):
                 ora      = self.trascrizioni.item(row, 0).text()
@@ -98,9 +100,7 @@ class guiImp(QMainWindow, Ui_MainWindow):
         self.controller.audio.setSilenzioPostTrasm(valore)
         self._update_status(f"Silenzio post-TX: {valore}s")
 
-    # ------------------------------------------------------------------ #
-    #  SLOT TABELLA                                                        #
-    # ------------------------------------------------------------------ #
+    #SLOT TABELLA#
 
     def _on_riga_selezionata(self):
         """Quando si clicca una riga, mostra la risposta AI nel pannello destro."""
@@ -111,9 +111,7 @@ class guiImp(QMainWindow, Ui_MainWindow):
         if item_testo:
             self.OllamaLog.setPlainText(f"Trascrizione selezionata:\n{item_testo.text()}")
 
-    # ------------------------------------------------------------------ #
-    #  METODI PUBBLICI — chiamati da RadioController via Signal            #
-    # ------------------------------------------------------------------ #
+    #METODI PUBBLICI chiamati da RadioController via Signal#
 
     def on_new_transcription(self, testo: str, durata: float):
         """
@@ -172,9 +170,7 @@ class guiImp(QMainWindow, Ui_MainWindow):
         """Aggiorna la label del modello Ollama attivo."""
         self.label.setText(f"Modello: {model_name}")
 
-    # ------------------------------------------------------------------ #
-    #  UTILITY                                                             #
-    # ------------------------------------------------------------------ #
+    #UTILITY#
 
     def _update_status(self, messaggio: str):
         """Scrive un messaggio nella status bar in basso."""

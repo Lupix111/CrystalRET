@@ -6,6 +6,8 @@ import time
 from STT import STT
 import os
 
+
+
 class audioTrigger:
 
     CHUNK = 1024
@@ -22,7 +24,8 @@ class audioTrigger:
         self.is_recording = False
         self.silence_start_time = None
         self.id_trasmissione = self.getNextId() # ID iniziale
-        
+        self._running = True
+
         self.stream = self.p.open(
             format=self.FORMAT, channels=self.CHANNELS,
             rate=self.RATE, input=True, frames_per_buffer=self.CHUNK
@@ -66,14 +69,14 @@ class audioTrigger:
         except ValueError:
             print("Inserisci un numero di secondi non negativo")
 
-    def stopRecord(self):
+    def stopRecord(self): #Funzione interna
         print(f"[ID {self.id_trasmissione:03d}] Fine trasmissione.")
         self.salvaMp3()
         self.is_recording = False
         self.silence_start_time = None
 
     
-    def getNextId(self):
+    def getNextId(self): #Funzione interna
         """Trova l'ultimo numero ID nella cartella e restituisce il successivo"""
         files = [f for f in os.listdir('.') if f.startswith("record_") and f.endswith(".mp3")]
         if not files:
@@ -82,7 +85,7 @@ class audioTrigger:
         ids = [int(f.split('_')[1].split('.')[0]) for f in files]
         return max(ids) + 1
 
-    def salvaMp3(self):
+    def salvaMp3(self): #Funzione interna 
         """Converte il buffer in MP3 e lo salva con ID incrementale"""
         if not self.buffer:
             return
@@ -106,10 +109,18 @@ class audioTrigger:
         self.id_trasmissione += 1
         self.buffer = [] # Svuota il buffer
 
+    def stopListen(self):
+        self._running = False
+
+    def startListen(self):
+        self._running = True
+        self.ascolta()
+
     def ascolta(self):
         print(f"Radio in ascolto (ID Corrente: {self.id_trasmissione:03d})...")
+
         try:
-            while True:
+            while self._running:
                 data = self.stream.read(self.CHUNK, exception_on_overflow=False)
                 audio_np = np.frombuffer(data, dtype=np.int16)
                 rms = np.sqrt(np.mean(audio_np**2))

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'CrystalRET_UIcQyYXK.ui'
+## Form generated from reading UI file 'CrystalRET_UIwixkmM.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.0
 ##
@@ -20,7 +20,7 @@ from PySide6.QtWidgets import (QApplication, QGridLayout, QGroupBox, QHBoxLayout
     QProgressBar, QPushButton, QSizePolicy, QSlider,
     QStatusBar, QTableWidget, QTableWidgetItem, QTextEdit,
     QVBoxLayout, QWidget)
-import icons
+import icons_rc
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -183,7 +183,7 @@ class Ui_MainWindow(object):
         self.groupBoxAudioLev.setTitle(QCoreApplication.translate("MainWindow", u"Livello Audio (dBFS)", None))
         self.groupBoxSquelch.setTitle(QCoreApplication.translate("MainWindow", u"Squelch", None))
         self.groupBoxStatusReg.setTitle(QCoreApplication.translate("MainWindow", u"Status Registrazione", None))
-        self.groupBoxSlider.setTitle(QCoreApplication.translate("MainWindow", u"GroupBox", None))
+        self.groupBoxSlider.setTitle(QCoreApplication.translate("MainWindow", u"Trigger Audio", None))
         self.groupBoxAi.setTitle(QCoreApplication.translate("MainWindow", u"Analisi AI", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
     # retranslateUi
