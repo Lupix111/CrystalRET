@@ -6,6 +6,7 @@ import sys
 import os
 import datetime
 from radioController import radioController
+from dialogImpostazioni import dialogImpostazioni
 
 
 class guiImp(QMainWindow, Ui_MainWindow):
@@ -57,14 +58,14 @@ class guiImp(QMainWindow, Ui_MainWindow):
 
     def _on_monitoraggio(self):
         """Avvia il monitoraggio radio."""
-        self.controller.startListen()
+        self.controller.startListenVad()
         self._update_status("Monitoraggio avviato.")
         self.pushButton_monitoraggio.setEnabled(False)
         self.pushButton_pausa.setEnabled(True)
 
     def _on_pausa(self):
         """Mette in pausa il monitoraggio."""
-        self.controller.stopListen()
+        self.controller.stopListenVad()
         self._update_status("Monitoraggio fermato.")
         self.pushButton_monitoraggio.setEnabled(True)
         self.pushButton_pausa.setEnabled(False)
@@ -84,9 +85,8 @@ class guiImp(QMainWindow, Ui_MainWindow):
         self._update_status(f"Log esportato: {filename}")
 
     def _on_impostazioni(self):
-        """Apre il pannello impostazioni."""
-        # TODO: aprire QDialog impostazioni
-        self._update_status("Impostazioni (TODO).")
+        dialog = dialogImpostazioni(self.controller, parent=self)
+        dialog.exec()
 
     #SLOT SLIDER#
 

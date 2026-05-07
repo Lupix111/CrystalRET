@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <property name="windowIcon">
-   <iconset resource="icons/icons.qrc">
+   <iconset>
     <normaloff>:/Main/main_icon.png</normaloff>:/Main/main_icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -87,7 +87,7 @@
           <property name="geometry">
            <rect>
             <x>20</x>
-            <y>10</y>
+            <y>20</y>
             <width>231</width>
             <height>81</height>
            </rect>
@@ -163,7 +163,7 @@
        <item>
         <widget class="QGroupBox" name="groupBoxSlider">
          <property name="title">
-          <string>GroupBox</string>
+          <string>Trigger Audio</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_5">
           <item>
