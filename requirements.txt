@@ -1,5 +1,5 @@
 # --- Gestione Audio e Segnale ---
-pyaudio             # Cattura l'audio live dal jack/scheda audio (forse da buttare)
+pyaudio             # Cattura l'audio live dal jack/scheda audio 
 numpy               # Calcoli matematici per lo Squelch/VAD      (forse da buttare)
 pydub               # Manipolazione file audio (salvataggio log)
 
