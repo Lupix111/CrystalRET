@@ -18,6 +18,7 @@ class guiImp(QMainWindow, Ui_MainWindow):
         self._setup_trascrizioni()
         self._setup_slider_labels()
         self._connect_signals()
+        self.controller.ollama._check_ollama()
         self._update_status("Pronto.")
 
     #SETUP INIZIALE#
@@ -66,7 +67,7 @@ class guiImp(QMainWindow, Ui_MainWindow):
     def _on_pausa(self):
         """Mette in pausa il monitoraggio."""
         self.controller.stopListenVad()
-        self._update_status("Monitoraggio fermato.")
+        self._update_status("Monitoraggio in pausa.")
         self.pushButton_monitoraggio.setEnabled(True)
         self.pushButton_pausa.setEnabled(False)
 

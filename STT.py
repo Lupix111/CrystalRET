@@ -5,8 +5,8 @@ class STT:
     
     def __init__(self):
         self.model_size = "tiny"
-        self.device        = "cuda"
-        self.compute_type  = "int8_float16"
+        self.device        = "cpu" #"cuda" verrebbe normalmente usato qua ma per ora uso cpu
+        self.compute_type  = "int8" #"int8_float16" questo è per cuda, si deve installare cublas64_12.dll
         self.model = WhisperModel(self.model_size, device=self.device, compute_type=self.compute_type)
 
     def setModel(self, model_size: str):

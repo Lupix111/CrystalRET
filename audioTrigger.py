@@ -7,7 +7,7 @@ from STT import STT
 import os
 
 
-
+#    VECCHIO AUDIOTRIGGER, CODICE LEGACY E MERDOSO, NON FUNZIONA, NON USARE
 class audioTrigger:
 
     CHUNK = 1024

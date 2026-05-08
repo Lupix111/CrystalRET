@@ -13,3 +13,4 @@ ollama              # Client per comunicare con il modello Llama locale
 
 # --- Utility ---
 python-dotenv       # Per gestire eventuali chiavi o configurazioni
+requests            # Per fare il check di Ollama attraverso la sua porta http locale

@@ -3,16 +3,26 @@ from STT import STT
 from audioTrigger import audioTrigger
 from localOllama import LocalOllama
 from alternative_audioTrigger import alternative_audioTrigger
+from PySide6.QtCore import QThread
+
+class AudioWorker(QThread):
+    def __init__(self, audio):
+        super().__init__()
+        self.audio = audio
+
+    def run(self):
+        self.audio.startListen()
+
 class radioController:
     def __init__(self):
-        self.alt_audio = audioTrigger()
+        #self.alt_audio = audioTrigger() #vecchio audio trigger
         self.stt = STT()
         self.testo = ""
         self.ollama = LocalOllama()
-        self.audio = alternative_audioTrigger()
 
         # trigger con Silero VAD
         self.audio = alternative_audioTrigger()
+        self.audio_worker = AudioWorker(self.audio)
         self.audio.on_trasmissione_finita = self.gestisci_fine_trasmissione
         
         # legacy — istanziare solo se si vuole tornare al trigger originale
@@ -20,7 +30,7 @@ class radioController:
         # self.audio.on_trasmissione_finita = self.gestisci_fine_trasmissione
 
     def esegui_analisi(self, file_mp3):
-        print(f"Analisi AI iniziata per {file_mp3}...")
+        print(f"Analisi AI STT iniziata per {file_mp3}...")
         self.testo = self.stt.startTranscibe(file_mp3)
         if self.testo:
             print(f"RISULTATO TRASCRIZIONE: {self.testo}")
@@ -31,7 +41,7 @@ class radioController:
     def gestisci_fine_trasmissione(self, file_mp3):
         thread_stt = threading.Thread(target=self.esegui_analisi, args=(file_mp3,))
         thread_stt.start()
-
+    """
     # --- controlli trigger originale ---
     def setSquelch(self, valore):
         self.alt_audio.setSquelch(valore)
@@ -44,13 +54,15 @@ class radioController:
 
     def startListen(self):
         self.alt_audio.startListen()
-
+    """
     # controlli Silero VAD 
     def setVadThreshold(self, valore):
         self.audio.setVadThreshold(valore)
 
     def stopListenVad(self):
         self.audio.stopListen()
+        self.audio_worker.wait() 
 
     def startListenVad(self):
-        self.audio.startListen()
+        self.audio_worker = AudioWorker(self.audio)
+        self.audio_worker.start()
