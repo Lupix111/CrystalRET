@@ -24,14 +24,16 @@ class guiImp(QMainWindow, Ui_MainWindow):
         self._update_status("Pronto.")
         self.promptEdit.setText(self.controller.ollama.prompt)
         self.promptEdit.textChanged.connect(self._on_prompt_changed)
+        self.spinBoxFrequenza.setValue(145.500)
+        self.spinBoxFrequenza.valueChanged.connect(self._on_frequenza_changed)
 
     #SETUP INIZIALE#
 
     def _setup_trascrizioni(self):
         """Configura le colonne della tabella log."""
-        self.trascrizioni.setColumnCount(4)
-        self.trascrizioni.setHorizontalHeaderLabels(["Ora", "Durata", "Stato", "Trascrizione"])
-        self.trascrizioni.horizontalHeader().setSectionResizeMode(3, QHeaderView.ResizeMode.Stretch)
+        self.trascrizioni.setColumnCount(5)
+        self.trascrizioni.setHorizontalHeaderLabels(["Ora", "Durata", "Freq (MHz)", "Stato", "Trascrizione"])
+        self.trascrizioni.horizontalHeader().setSectionResizeMode(4, QHeaderView.ResizeMode.Stretch)
         self.trascrizioni.setEditTriggers(self.trascrizioni.EditTrigger.NoEditTriggers)
         self.trascrizioni.setSelectionBehavior(self.trascrizioni.SelectionBehavior.SelectRows)
         self.trascrizioni.verticalHeader().setVisible(False)
@@ -84,9 +86,10 @@ class guiImp(QMainWindow, Ui_MainWindow):
             for row in range(self.trascrizioni.rowCount()):
                 ora      = self.trascrizioni.item(row, 0).text()
                 durata   = self.trascrizioni.item(row, 1).text()
-                stato    = self.trascrizioni.item(row, 2).text()
-                testo    = self.trascrizioni.item(row, 3).text()
-                f.write(f"[{ora}] ({durata}) [{stato}] {testo}\n")
+                freq     = self.trascrizioni.item(row, 2).text()
+                stato    = self.trascrizioni.item(row, 3).text()
+                testo    = self.trascrizioni.item(row, 4).text()
+                f.write(f"[{ora}] ({durata}) [{freq} MHz] [{stato}] {testo}\n")
         self._update_status(f"Log esportato: {filename}")
 
     def _on_impostazioni(self):
@@ -112,15 +115,38 @@ class guiImp(QMainWindow, Ui_MainWindow):
         riga = self.trascrizioni.currentRow()
         if riga < 0:
             return
-        item_testo = self.trascrizioni.item(riga, 3)
-        if item_testo:
-            self.OllamaLog.setPlainText(f"Trascrizione selezionata:\n{item_testo.text()}")
+        item_testo = self.trascrizioni.item(riga, 4)
+        if not item_testo:
+            return
+
+        from PySide6.QtWidgets import QDialog, QVBoxLayout, QTextEdit, QLabel
+        dialog = QDialog(self)
+        dialog.setWindowTitle("Trascrizione")
+        dialog.setMinimumSize(400, 200)
+        layout = QVBoxLayout(dialog)
+
+        ora   = self.trascrizioni.item(riga, 0).text()
+        freq  = self.trascrizioni.item(riga, 2).text()
+        label = QLabel(f"Trasmissione del {ora} — {freq} MHz")
+        layout.addWidget(label)
+
+        testo_edit = QTextEdit()
+        testo_edit.setReadOnly(True)
+        testo_edit.setText(item_testo.text())
+        layout.addWidget(testo_edit)
+
+        dialog.exec()
 
     #SLOT TEXT EDITOR PER I PROMPT#
 
     def _on_prompt_changed(self):
         self.controller.ollama.prompt = self.promptEdit.toPlainText()
 
+    #SLOT LCD FREQ
+
+    def _on_frequenza_changed(self, valore: float):
+        self.lcdFrequenza.display(valore)
+   
     #METODI PUBBLICI chiamati da RadioController via Signal#
 
     def on_new_transcription(self, testo: str, durata: float):
@@ -130,17 +156,19 @@ class guiImp(QMainWindow, Ui_MainWindow):
         """
         ora     = datetime.datetime.now().strftime("%H:%M:%S")
         dur_str = f"0:{int(durata):02d}"
+        freq = str(self.spinBoxFrequenza.value())  # legge il valore attuale
         row     = self.trascrizioni.rowCount()
         self.trascrizioni.insertRow(row)
 
         self.trascrizioni.setItem(row, 0, QTableWidgetItem(ora))
         self.trascrizioni.setItem(row, 1, QTableWidgetItem(dur_str))
+        self.trascrizioni.setItem(row, 2, QTableWidgetItem(freq))
 
         stato_item = QTableWidgetItem("TX")
         stato_item.setForeground(QColor("#50c070"))
-        self.trascrizioni.setItem(row, 2, stato_item)
+        self.trascrizioni.setItem(row, 3, stato_item)
 
-        self.trascrizioni.setItem(row, 3, QTableWidgetItem(testo))
+        self.trascrizioni.setItem(row, 4, QTableWidgetItem(testo))
         self.trascrizioni.scrollToBottom()
         self._update_status(f"Nuova trascrizione ricevuta ({dur_str})")
 
@@ -157,7 +185,7 @@ class guiImp(QMainWindow, Ui_MainWindow):
         if ultima_riga >= 0:
             stato_item = QTableWidgetItem("TX+AI")
             stato_item.setForeground(QColor("#5070e0"))
-            self.trascrizioni.setItem(ultima_riga, 2, stato_item)
+            self.trascrizioni.setItem(ultima_riga, 3, stato_item)
 
     def on_livello_audio(self, valore: int):
         """
@@ -185,6 +213,11 @@ class guiImp(QMainWindow, Ui_MainWindow):
     def _update_status(self, messaggio: str):
         """Scrive un messaggio nella status bar in basso."""
         self.statusbar.showMessage(messaggio)
+
+    def closeEvent(self, event):
+        """Ferma tutti i thread prima di chiudere."""
+        self.controller.stopListenVad()
+        event.accept()
 
 
 if __name__ == "__main__":

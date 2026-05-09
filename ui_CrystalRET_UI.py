@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'CrystalRET_UIOrxqbg.ui'
+## Form generated from reading UI file 'CrystalRET_UIxecPzF.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.0
 ##
@@ -15,11 +15,11 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QGridLayout, QGroupBox, QHBoxLayout,
-    QHeaderView, QLCDNumber, QLabel, QMainWindow,
-    QProgressBar, QPushButton, QSizePolicy, QSlider,
-    QStatusBar, QTableWidget, QTableWidgetItem, QTextEdit,
-    QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QDoubleSpinBox, QGridLayout, QGroupBox,
+    QHBoxLayout, QHeaderView, QLCDNumber, QLabel,
+    QMainWindow, QProgressBar, QPushButton, QSizePolicy,
+    QSlider, QStatusBar, QTableWidget, QTableWidgetItem,
+    QTextEdit, QVBoxLayout, QWidget)
 import icons_rc
 
 class Ui_MainWindow(object):
@@ -76,21 +76,37 @@ class Ui_MainWindow(object):
 
         self.groupBoxSegnaleStato = QGroupBox(self.centralwidget)
         self.groupBoxSegnaleStato.setObjectName(u"groupBoxSegnaleStato")
-        self.verticalLayout = QVBoxLayout(self.groupBoxSegnaleStato)
-        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.groupBoxSegnaleStato.setMaximumSize(QSize(300, 16777215))
+        self.gridLayout = QGridLayout(self.groupBoxSegnaleStato)
+        self.gridLayout.setObjectName(u"gridLayout")
         self.groupBoxFreq = QGroupBox(self.groupBoxSegnaleStato)
         self.groupBoxFreq.setObjectName(u"groupBoxFreq")
+        self.verticalLayout_6 = QVBoxLayout(self.groupBoxFreq)
+        self.verticalLayout_6.setObjectName(u"verticalLayout_6")
         self.lcdFrequenza = QLCDNumber(self.groupBoxFreq)
         self.lcdFrequenza.setObjectName(u"lcdFrequenza")
-        self.lcdFrequenza.setGeometry(QRect(20, 20, 231, 81))
+        self.lcdFrequenza.setSmallDecimalPoint(True)
         self.lcdFrequenza.setDigitCount(6)
+        self.lcdFrequenza.setMode(QLCDNumber.Mode.Dec)
         self.lcdFrequenza.setSegmentStyle(QLCDNumber.SegmentStyle.Filled)
         self.lcdFrequenza.setProperty(u"value", 145500.000000000000000)
 
-        self.verticalLayout.addWidget(self.groupBoxFreq)
+        self.verticalLayout_6.addWidget(self.lcdFrequenza)
+
+        self.spinBoxFrequenza = QDoubleSpinBox(self.groupBoxFreq)
+        self.spinBoxFrequenza.setObjectName(u"spinBoxFrequenza")
+        self.spinBoxFrequenza.setDecimals(0)
+        self.spinBoxFrequenza.setMaximum(999999.000000000000000)
+        self.spinBoxFrequenza.setValue(145500.000000000000000)
+
+        self.verticalLayout_6.addWidget(self.spinBoxFrequenza)
+
+
+        self.gridLayout.addWidget(self.groupBoxFreq, 0, 0, 1, 1)
 
         self.groupBoxAudioLev = QGroupBox(self.groupBoxSegnaleStato)
         self.groupBoxAudioLev.setObjectName(u"groupBoxAudioLev")
+        self.groupBoxAudioLev.setMaximumSize(QSize(16777215, 75))
         self.verticalLayout_4 = QVBoxLayout(self.groupBoxAudioLev)
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
         self.livello_audio = QProgressBar(self.groupBoxAudioLev)
@@ -100,28 +116,37 @@ class Ui_MainWindow(object):
         self.verticalLayout_4.addWidget(self.livello_audio)
 
 
-        self.verticalLayout.addWidget(self.groupBoxAudioLev)
+        self.gridLayout.addWidget(self.groupBoxAudioLev, 1, 0, 1, 1)
 
         self.groupBoxSquelch = QGroupBox(self.groupBoxSegnaleStato)
         self.groupBoxSquelch.setObjectName(u"groupBoxSquelch")
-        self.progressBar_2 = QProgressBar(self.groupBoxSquelch)
-        self.progressBar_2.setObjectName(u"progressBar_2")
-        self.progressBar_2.setGeometry(QRect(70, 60, 118, 23))
-        self.progressBar_2.setValue(24)
+        self.groupBoxSquelch.setMaximumSize(QSize(16777215, 100))
+        self.verticalLayout = QVBoxLayout(self.groupBoxSquelch)
+        self.verticalLayout.setObjectName(u"verticalLayout")
         self.horizontalSlider_3 = QSlider(self.groupBoxSquelch)
         self.horizontalSlider_3.setObjectName(u"horizontalSlider_3")
-        self.horizontalSlider_3.setGeometry(QRect(60, 60, 160, 16))
         self.horizontalSlider_3.setOrientation(Qt.Orientation.Horizontal)
 
-        self.verticalLayout.addWidget(self.groupBoxSquelch)
+        self.verticalLayout.addWidget(self.horizontalSlider_3)
+
+        self.progressBar_2 = QProgressBar(self.groupBoxSquelch)
+        self.progressBar_2.setObjectName(u"progressBar_2")
+        self.progressBar_2.setValue(24)
+
+        self.verticalLayout.addWidget(self.progressBar_2)
+
+
+        self.gridLayout.addWidget(self.groupBoxSquelch, 2, 0, 1, 1)
 
         self.groupBoxStatusReg = QGroupBox(self.groupBoxSegnaleStato)
         self.groupBoxStatusReg.setObjectName(u"groupBoxStatusReg")
+        self.groupBoxStatusReg.setMaximumSize(QSize(16777215, 50))
 
-        self.verticalLayout.addWidget(self.groupBoxStatusReg)
+        self.gridLayout.addWidget(self.groupBoxStatusReg, 3, 0, 1, 1)
 
         self.groupBoxSlider = QGroupBox(self.groupBoxSegnaleStato)
         self.groupBoxSlider.setObjectName(u"groupBoxSlider")
+        self.groupBoxSlider.setMaximumSize(QSize(16777215, 75))
         self.verticalLayout_5 = QVBoxLayout(self.groupBoxSlider)
         self.verticalLayout_5.setObjectName(u"verticalLayout_5")
         self.horizontalSliderSquelch = QSlider(self.groupBoxSlider)
@@ -137,7 +162,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_5.addWidget(self.horizontalSliderSilenzioTime)
 
 
-        self.verticalLayout.addWidget(self.groupBoxSlider)
+        self.gridLayout.addWidget(self.groupBoxSlider, 4, 0, 1, 1)
 
 
         self.gridLayout_2.addWidget(self.groupBoxSegnaleStato, 1, 0, 1, 1)
@@ -186,6 +211,7 @@ class Ui_MainWindow(object):
         self.groupBoxTrascrizioni.setTitle(QCoreApplication.translate("MainWindow", u"Log Trasmissioni", None))
         self.groupBoxSegnaleStato.setTitle(QCoreApplication.translate("MainWindow", u"Segnale e Stato", None))
         self.groupBoxFreq.setTitle(QCoreApplication.translate("MainWindow", u"Frequenza (MHz)", None))
+        self.spinBoxFrequenza.setSuffix(QCoreApplication.translate("MainWindow", u"MHz", None))
         self.groupBoxAudioLev.setTitle(QCoreApplication.translate("MainWindow", u"Livello Audio (dBFS)", None))
         self.groupBoxSquelch.setTitle(QCoreApplication.translate("MainWindow", u"Squelch", None))
         self.groupBoxStatusReg.setTitle(QCoreApplication.translate("MainWindow", u"Status Registrazione", None))

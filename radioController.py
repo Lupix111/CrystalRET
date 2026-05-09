@@ -87,8 +87,9 @@ class radioController(QObject):
         self.audio.setVadThreshold(valore)
 
     def stopListenVad(self):
-        self.audio.stopListen()
-        self.audio_worker.wait() 
+        self.audio.stopListen()          # setta _running = False
+        if self.audio_worker.isRunning():
+            self.audio_worker.wait(3000) # aspetta max 3 secondi
 
     def startListenVad(self):
         self.audio_worker = AudioWorker(self.audio)
