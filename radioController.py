@@ -3,7 +3,7 @@ from STT import STT
 from audioTrigger import audioTrigger
 from localOllama import LocalOllama
 from alternative_audioTrigger import alternative_audioTrigger
-from PySide6.QtCore import QThread
+from PySide6.QtCore import QThread, QObject, Signal
 import os
 import shutil
 
@@ -16,13 +16,17 @@ class AudioWorker(QThread):
     def run(self):
         self.audio.startListen()
 
-class radioController:
+class radioController(QObject):
+    transcription_ready = Signal(str, float)
+    ai_response_ready   = Signal(str)
+
     def __init__(self):
+        super().__init__()
         # Ci assicuriamo che le cartelle esistono, sennò le creiamo
         os.makedirs("recordings", exist_ok=True)
         os.makedirs("input_transcript", exist_ok=True)
         os.makedirs("already_processed_transcript", exist_ok=True)
-        
+
         #self.alt_audio = audioTrigger() #vecchio audio trigger
         self.stt = STT()
         self.testo = ""
@@ -40,9 +44,12 @@ class radioController:
     # Roba per la trascrizione
     def esegui_analisi(self, file_mp3):
         print(f"Analisi AI STT iniziata per {file_mp3}...")
-        self.testo = self.stt.startTranscibe(file_mp3)
+        self.testo, durata= self.stt.startTranscibe(file_mp3)
         if not self.testo:
             return
+        else:
+            print(f"RISULTATI DEL STT: {self.testo}")
+            self.transcription_ready.emit(self.testo, durata)
         
         # Qua facciamo il pathing per le varie cartelle, input_transcript
         os.makedirs("input_transcript", exist_ok=True)
@@ -53,8 +60,7 @@ class radioController:
 
         # Ollama analizza il transcript
         risultato = self.ollama.analisiFile(self.testo)
-        print(f"RISULTATO AI: {risultato}")
-
+        self.ai_response_ready.emit(risultato)
         # 4. Sposta il transcript in already_processed_transcript
         os.makedirs("already_processed_transcript", exist_ok=True)
         shutil.move(transcript_path, os.path.join("already_processed_transcript", f"{nome_base}.txt"))
@@ -87,3 +93,28 @@ class radioController:
     def startListenVad(self):
         self.audio_worker = AudioWorker(self.audio)
         self.audio_worker.start()
+
+    def setModelSTT(self, model_size: str, on_finished=None, on_error=None):
+        
+        class _Loader(QThread):
+            finished = Signal()
+            error    = Signal(str)
+
+            def __init__(self, stt, size):
+                super().__init__()
+                self.stt  = stt
+                self.size = size
+
+            def run(self):
+                try:
+                    self.stt.setModel(self.size)
+                    self.finished.emit()
+                except Exception as e:
+                    self.error.emit(str(e))
+
+        self._model_loader = _Loader(self.stt, model_size)  # vive sul controller
+        if on_finished:
+            self._model_loader.finished.connect(on_finished)
+        if on_error:
+            self._model_loader.error.connect(on_error)
+        self._model_loader.start()

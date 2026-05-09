@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <property name="windowIcon">
-   <iconset>
+   <iconset resource="icons_rc/icons.qrc">
     <normaloff>:/Main/main_icon.png</normaloff>:/Main/main_icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
@@ -200,9 +200,22 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="label">
+        <widget class="QLabel" name="systemPromptlabel">
          <property name="text">
-          <string>TextLabel</string>
+          <string>System Prompt</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QTextEdit" name="promptEdit">
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>100</height>
+          </size>
+         </property>
+         <property name="placeholderText">
+          <string>Inserisci il system prompt per Ollama...</string>
          </property>
         </widget>
        </item>
@@ -214,7 +227,7 @@
   <widget class="QStatusBar" name="statusbar"/>
  </widget>
  <resources>
-  <include location="icons/icons.qrc"/>
+  <include location="icons_rc/icons.qrc"/>
  </resources>
  <connections/>
 </ui>

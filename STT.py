@@ -22,4 +22,4 @@ class STT:
     def startTranscibe(self, file_mp3_path: str) -> str:
         segments, info = self.model.transcribe(file_mp3_path, beam_size=5, language="it")
         full_text = " ".join(segment.text for segment in segments)
-        return full_text.strip()
+        return full_text.strip(), info.duration

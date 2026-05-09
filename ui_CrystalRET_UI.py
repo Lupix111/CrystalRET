@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'CrystalRET_UIwixkmM.ui'
+## Form generated from reading UI file 'CrystalRET_UIOrxqbg.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.0
 ##
@@ -82,7 +82,7 @@ class Ui_MainWindow(object):
         self.groupBoxFreq.setObjectName(u"groupBoxFreq")
         self.lcdFrequenza = QLCDNumber(self.groupBoxFreq)
         self.lcdFrequenza.setObjectName(u"lcdFrequenza")
-        self.lcdFrequenza.setGeometry(QRect(20, 10, 231, 81))
+        self.lcdFrequenza.setGeometry(QRect(20, 20, 231, 81))
         self.lcdFrequenza.setDigitCount(6)
         self.lcdFrequenza.setSegmentStyle(QLCDNumber.SegmentStyle.Filled)
         self.lcdFrequenza.setProperty(u"value", 145500.000000000000000)
@@ -152,10 +152,16 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_2.addWidget(self.OllamaLog)
 
-        self.label = QLabel(self.groupBoxAi)
-        self.label.setObjectName(u"label")
+        self.systemPromptlabel = QLabel(self.groupBoxAi)
+        self.systemPromptlabel.setObjectName(u"systemPromptlabel")
 
-        self.verticalLayout_2.addWidget(self.label)
+        self.verticalLayout_2.addWidget(self.systemPromptlabel)
+
+        self.promptEdit = QTextEdit(self.groupBoxAi)
+        self.promptEdit.setObjectName(u"promptEdit")
+        self.promptEdit.setMaximumSize(QSize(16777215, 100))
+
+        self.verticalLayout_2.addWidget(self.promptEdit)
 
 
         self.gridLayout_2.addWidget(self.groupBoxAi, 1, 2, 1, 1)
@@ -185,6 +191,7 @@ class Ui_MainWindow(object):
         self.groupBoxStatusReg.setTitle(QCoreApplication.translate("MainWindow", u"Status Registrazione", None))
         self.groupBoxSlider.setTitle(QCoreApplication.translate("MainWindow", u"Trigger Audio", None))
         self.groupBoxAi.setTitle(QCoreApplication.translate("MainWindow", u"Analisi AI", None))
-        self.label.setText(QCoreApplication.translate("MainWindow", u"TextLabel", None))
+        self.systemPromptlabel.setText(QCoreApplication.translate("MainWindow", u"System Prompt", None))
+        self.promptEdit.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Inserisci il system prompt per Ollama...", None))
     # retranslateUi
 

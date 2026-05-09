@@ -1,6 +1,8 @@
 import pyaudio
 from PySide6.QtWidgets import (QDialog, QVBoxLayout, QHBoxLayout,
                                 QLabel, QComboBox, QPushButton, QGroupBox)
+from PySide6.QtWidgets import QProgressDialog, QApplication
+from PySide6.QtCore import QThread, Signal
 
 
 WHISPER_MODELS = ["tiny", "base", "small", "medium",
@@ -9,6 +11,23 @@ WHISPER_MODELS = ["tiny", "base", "small", "medium",
 
 OLLAMA_MODELS  = ["mistral", "orca-mini", "phi-2"]
 
+class ModelLoader(QThread):
+    finished = Signal()
+    error    = Signal(str)
+
+    def __init__(self, controller, model_size):
+        super().__init__()
+        self.controller = controller
+        self.model_size = model_size
+
+    def run(self):
+        try:
+            self.controller.stt.setModel(self.model_size)
+            self.finished.emit()
+        except Exception as e:
+            self.error.emit(str(e))
+
+            
 
 class dialogImpostazioni(QDialog):
     def __init__(self, controller, parent=None):
@@ -106,12 +125,39 @@ class dialogImpostazioni(QDialog):
         device_index = self.combo_audio.currentData()
         self.controller.audio.setDeviceIndex(device_index)
 
-        # modello Whisper
+        # modello Whisper, in background con progress dialog
         whisper_model = self.combo_whisper.currentText()
-        self.controller.stt.setModel(whisper_model)
+        if whisper_model != self.controller.stt.model_size:
+            self._carica_modello_whisper(whisper_model)
+        else:
+            self.accept()
 
         # modello Ollama
         ollama_model = self.combo_ollama.currentText()
         self.controller.ollama.setModel(ollama_model)
-
         self.accept()
+
+    def _carica_modello_whisper(self, model_size):
+        self.progress = QProgressDialog(
+            f"Download modello Whisper '{model_size}'...\nAttendere.",
+            None, 0, 0, self
+        )
+        self.progress.setWindowTitle("Caricamento modello")
+        self.progress.setModal(True)
+        self.progress.show()
+        QApplication.processEvents()
+
+        self.controller.setModelSTT(
+            model_size,
+            on_finished=self._on_modello_pronto,
+            on_error=self._on_errore_modello
+        )
+
+    def _on_modello_pronto(self):
+        self.progress.close()
+        self.accept()
+
+    def _on_errore_modello(self, messaggio):
+        self.progress.close()
+        from PySide6.QtWidgets import QMessageBox
+        QMessageBox.critical(self, "Errore", f"Impossibile caricare il modello:\n{messaggio}")

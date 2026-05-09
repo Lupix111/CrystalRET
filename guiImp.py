@@ -15,11 +15,15 @@ class guiImp(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
 
         self.controller = radioController()
+        self.controller.transcription_ready.connect(self.on_new_transcription)
+        self.controller.ai_response_ready.connect(self.on_ai_response)
         self._setup_trascrizioni()
         self._setup_slider_labels()
         self._connect_signals()
         self.controller.ollama._check_ollama()
         self._update_status("Pronto.")
+        self.promptEdit.setText(self.controller.ollama.prompt)
+        self.promptEdit.textChanged.connect(self._on_prompt_changed)
 
     #SETUP INIZIALE#
 
@@ -36,7 +40,7 @@ class guiImp(QMainWindow, Ui_MainWindow):
     def _setup_slider_labels(self):
         """Imposta i range degli slider."""
         self.horizontalSliderSquelch.setMinimum(0)
-        self.horizontalSliderSquelch.setMaximum(200)
+        self.horizontalSliderSquelch.setMaximum(100)
         self.horizontalSliderSquelch.setValue(60)
 
         self.horizontalSliderSilenzioTime.setMinimum(1)
@@ -111,6 +115,11 @@ class guiImp(QMainWindow, Ui_MainWindow):
         item_testo = self.trascrizioni.item(riga, 3)
         if item_testo:
             self.OllamaLog.setPlainText(f"Trascrizione selezionata:\n{item_testo.text()}")
+
+    #SLOT TEXT EDITOR PER I PROMPT#
+
+    def _on_prompt_changed(self):
+        self.controller.ollama.prompt = self.promptEdit.toPlainText()
 
     #METODI PUBBLICI chiamati da RadioController via Signal#
 
