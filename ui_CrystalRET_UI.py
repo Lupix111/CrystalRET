@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'CrystalRET_UIxecPzF.ui'
+## Form generated from reading UI file 'CrystalRET_UIJoXaBr.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.0
 ##
@@ -107,13 +107,15 @@ class Ui_MainWindow(object):
         self.groupBoxAudioLev = QGroupBox(self.groupBoxSegnaleStato)
         self.groupBoxAudioLev.setObjectName(u"groupBoxAudioLev")
         self.groupBoxAudioLev.setMaximumSize(QSize(16777215, 75))
-        self.verticalLayout_4 = QVBoxLayout(self.groupBoxAudioLev)
-        self.verticalLayout_4.setObjectName(u"verticalLayout_4")
+        self.gridLayout_3 = QGridLayout(self.groupBoxAudioLev)
+        self.gridLayout_3.setObjectName(u"gridLayout_3")
         self.livello_audio = QProgressBar(self.groupBoxAudioLev)
         self.livello_audio.setObjectName(u"livello_audio")
-        self.livello_audio.setValue(24)
+        self.livello_audio.setMinimumSize(QSize(0, 30))
+        self.livello_audio.setValue(0)
+        self.livello_audio.setTextVisible(False)
 
-        self.verticalLayout_4.addWidget(self.livello_audio)
+        self.gridLayout_3.addWidget(self.livello_audio, 0, 0, 1, 1)
 
 
         self.gridLayout.addWidget(self.groupBoxAudioLev, 1, 0, 1, 1)
@@ -141,6 +143,18 @@ class Ui_MainWindow(object):
         self.groupBoxStatusReg = QGroupBox(self.groupBoxSegnaleStato)
         self.groupBoxStatusReg.setObjectName(u"groupBoxStatusReg")
         self.groupBoxStatusReg.setMaximumSize(QSize(16777215, 50))
+        self.horizontalLayout = QHBoxLayout(self.groupBoxStatusReg)
+        self.horizontalLayout.setObjectName(u"horizontalLayout")
+        self.labelStatusReg = QLabel(self.groupBoxStatusReg)
+        self.labelStatusReg.setObjectName(u"labelStatusReg")
+
+        self.horizontalLayout.addWidget(self.labelStatusReg)
+
+        self.labelTimerReg = QLabel(self.groupBoxStatusReg)
+        self.labelTimerReg.setObjectName(u"labelTimerReg")
+
+        self.horizontalLayout.addWidget(self.labelTimerReg)
+
 
         self.gridLayout.addWidget(self.groupBoxStatusReg, 3, 0, 1, 1)
 
@@ -215,6 +229,8 @@ class Ui_MainWindow(object):
         self.groupBoxAudioLev.setTitle(QCoreApplication.translate("MainWindow", u"Livello Audio (dBFS)", None))
         self.groupBoxSquelch.setTitle(QCoreApplication.translate("MainWindow", u"Squelch", None))
         self.groupBoxStatusReg.setTitle(QCoreApplication.translate("MainWindow", u"Status Registrazione", None))
+        self.labelStatusReg.setText(QCoreApplication.translate("MainWindow", u"In ascolto", None))
+        self.labelTimerReg.setText(QCoreApplication.translate("MainWindow", u"00:00", None))
         self.groupBoxSlider.setTitle(QCoreApplication.translate("MainWindow", u"Trigger Audio", None))
         self.groupBoxAi.setTitle(QCoreApplication.translate("MainWindow", u"Analisi AI", None))
         self.systemPromptlabel.setText(QCoreApplication.translate("MainWindow", u"System Prompt", None))

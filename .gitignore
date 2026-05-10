@@ -1,0 +1,35 @@
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+
+# PyInstaller
+build/
+dist/
+*.spec
+
+# Dati generati dal programma
+recordings/
+input_transcript/
+already_processed_transcript/
+log_files/
+log_radio.txt
+
+# Cache modelli AI
+.cache/
+
+# Installer
+installer_output/
+
+# VSCode
+.vscode/
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# PyAudio / temp
+*.wav
+*.mp3

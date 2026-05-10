@@ -4,35 +4,41 @@ import torch
 import time
 import os
 from pydub import AudioSegment
+from utils import get_base_dir
 
 
 class alternative_audioTrigger:
 
-    CHUNK    = 512    # Silero VAD richiede esattamente 512 campioni a 16kHz
+    CHUNK    = 512
     FORMAT   = pyaudio.paInt16
     CHANNELS = 1
-    RATE     = 16000  # Silero VAD richiede 16kHz
+    RATE     = 16000
 
-    VAD_THRESHOLD       = 0.5  # probabilità minima per considerare voce attiva (0.0 - 1.0)
-    SILENZIO_POST_TRASM = 2    # secondi di silenzio prima di chiudere la registrazione
+    VAD_THRESHOLD       = 0.5
+    SILENZIO_POST_TRASM = 2
 
-    def __init__(self, device_index: int = None):
-        # Stato interno
-        self.device_index      = device_index
-        self.buffer            = []
-        self.is_recording      = False
-        self.silence_start     = None
-        self.id_trasmissione   = self._get_next_id()
-        self._running          = False
+    def __init__(self, device_index: int = None, recordings_dir: str = None):
+        self.device_index    = device_index
+        self.buffer          = []
+        self.is_recording    = False
+        self.silence_start   = None
+        self._running        = False
+        self.on_audio_level  = None
 
-        # callback chiamata quando un file MP3 è pronto (collegare a RadioController)
+        # cartella recordings — usa quella passata dal controller oppure la calcola
+        if recordings_dir:
+            self.recordings_dir = recordings_dir
+        else:
+            self.recordings_dir = os.path.join(get_base_dir(), "recordings")
+        os.makedirs(self.recordings_dir, exist_ok=True)
+
+        self.id_trasmissione        = self._get_next_id()
         self.on_trasmissione_finita = None
-
-        # PyAudio
+        self.on_trasmissione_iniziata = None
+        self.on_rec_stop              = None
         self.p      = pyaudio.PyAudio()
         self.stream = None
 
-        # Silero VAD
         print("Caricamento Silero VAD...")
         self.vad_model, _ = torch.hub.load(
             repo_or_dir="snakers4/silero-vad",
@@ -42,10 +48,9 @@ class alternative_audioTrigger:
         self.vad_model.eval()
         print("Silero VAD pronto.")
 
-    #CONTROLLO STREAM#
+    # CONTROLLO STREAM
 
     def _apri_stream(self):
-        """Apre lo stream PyAudio con il device selezionato."""
         kwargs = dict(
             format=self.FORMAT,
             channels=self.CHANNELS,
@@ -58,16 +63,14 @@ class alternative_audioTrigger:
         self.stream = self.p.open(**kwargs)
 
     def startListen(self):
-        """Avvia il loop di ascolto."""
         self._running = True
         self._apri_stream()
         self._ascolta()
 
     def stopListen(self):
-        """Ferma il loop di ascolto."""
         self._running = False
 
-    #LOOP PRINCIPALE#
+    # LOOP PRINCIPALE
 
     def _ascolta(self):
         print(f"In ascolto (ID corrente: {self.id_trasmissione:03d})...")
@@ -75,9 +78,13 @@ class alternative_audioTrigger:
             while self._running:
                 data     = self.stream.read(self.CHUNK, exception_on_overflow=False)
                 audio_np = np.frombuffer(data, dtype=np.int16).astype(np.float32) / 32768.0
+                # calcola RMS e normalizza 0-100
+                rms = int(np.sqrt(np.mean(audio_np**2)) * 500)
+                rms = min(rms, 100)  # clamp a 100
+                if self.on_audio_level:
+                    self.on_audio_level(rms)
                 tensor   = torch.from_numpy(audio_np)
 
-                # Silero VAD: probabilità che ci sia voce
                 with torch.no_grad():
                     prob = self.vad_model(tensor, self.RATE).item()
 
@@ -87,11 +94,13 @@ class alternative_audioTrigger:
                     if not self.is_recording:
                         print(f"\n[ID {self.id_trasmissione:03d}] Trasmissione iniziata (prob={prob:.2f})")
                         self.is_recording = True
+                        if self.on_trasmissione_iniziata:  # ← aggiungi queste due righe
+                            self.on_trasmissione_iniziata()
                     self.buffer.append(data)
                     self.silence_start = None
 
                 elif self.is_recording:
-                    self.buffer.append(data)  # registra anche il silenzio finale
+                    self.buffer.append(data)
                     if self.silence_start is None:
                         self.silence_start = time.time()
                     if time.time() - self.silence_start > self.SILENZIO_POST_TRASM:
@@ -104,21 +113,19 @@ class alternative_audioTrigger:
                 self.stream.stop_stream()
                 self.stream.close()
 
-    #FINE TRASMISSIONE#
+    # FINE TRASMISSIONE
 
     def _stopRecord(self):
-        """Chiude la registrazione corrente e salva il file MP3."""
+        if self.on_rec_stop:
+            self.on_rec_stop()
         print(f"[ID {self.id_trasmissione:03d}] Fine trasmissione.")
         filename = self._salva_mp3()
         self.is_recording  = False
         self.silence_start = None
-
-        # Notifica il controller che il file è pronto
         if filename and self.on_trasmissione_finita:
             self.on_trasmissione_finita(filename)
 
     def _salva_mp3(self) -> str:
-        """Salva il buffer come file MP3 e restituisce il path."""
         if not self.buffer:
             return ""
 
@@ -130,8 +137,7 @@ class alternative_audioTrigger:
             channels=self.CHANNELS
         )
 
-        os.makedirs("recordings", exist_ok=True)
-        filename = os.path.join("recordings", f"record_{self.id_trasmissione:03d}.mp3")
+        filename = os.path.join(self.recordings_dir, f"record_{self.id_trasmissione:03d}.mp3")
         audio_segment.export(filename, format="mp3")
         print(f"--- Salvato: {filename} ---")
 
@@ -139,43 +145,37 @@ class alternative_audioTrigger:
         self.buffer = []
         return filename
 
-    #IMPOSTAZIONI#
+    # IMPOSTAZIONI
 
     def setVadThreshold(self, valore: float):
-        """Soglia VAD (0.0 - 1.0). Più alto = meno sensibile."""
         if 0.0 <= valore <= 1.0:
             self.VAD_THRESHOLD = valore
         else:
             print("La soglia VAD deve essere tra 0.0 e 1.0")
 
     def setSilenzioPostTrasm(self, secondi: float):
-        """Secondi di silenzio prima di chiudere la registrazione."""
         if secondi > 0:
             self.SILENZIO_POST_TRASM = secondi
         else:
             print("Inserisci un valore positivo")
 
     def setDeviceIndex(self, index: int):
-        """Cambia il dispositivo audio. Riavvia lo stream se attivo."""
         self.device_index = index
         if self._running:
             self.stream.stop_stream()
             self.stream.close()
             self._apri_stream()
 
-    #UTILITY#
+    # UTILITY
 
     def _get_next_id(self) -> int:
-        """Trova l'ID successivo guardando i file già salvati."""
-        os.makedirs("recordings", exist_ok=True)
-        files = [f for f in os.listdir("recordings") if f.startswith("record_") and f.endswith(".mp3")]
+        files = [f for f in os.listdir(self.recordings_dir) if f.startswith("record_") and f.endswith(".mp3")]
         if not files:
             return 1
         ids = [int(f.split("_")[1].split(".")[0]) for f in files]
         return max(ids) + 1
 
     def get_input_devices(self) -> list[dict]:
-        """Restituisce la lista dei dispositivi di input disponibili."""
         devices = []
         for i in range(self.p.get_device_count()):
             info = self.p.get_device_info_by_index(i)
@@ -184,6 +184,5 @@ class alternative_audioTrigger:
         return devices
 
     def terminate(self):
-        """Rilascia le risorse PyAudio."""
         self.stopListen()
         self.p.terminate()

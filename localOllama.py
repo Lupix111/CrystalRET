@@ -1,18 +1,32 @@
 import ollama
-import os
+import os, sys
 import shutil
 import requests
 import subprocess
 import time
+from PySide6.QtWidgets import QMessageBox
+import webbrowser
+
 
 
 models = ["mistral","orca-mini","phi-2"]
 
-class LocalOllama():
+def _get_base_dir() -> str:
+    """Restituisce la cartella base sia in sviluppo che con PyInstaller"""
+    if getattr(sys, 'frozen', False):
+        # siamo dentro l'exe PyInstaller
+        return os.path.dirname(sys.executable)
+    else:
+        # siamo in sviluppo normale
+        return os.path.dirname(os.path.abspath(__file__))
 
+class LocalOllama:
     def __init__(self):
-        self.path = "C:\\Users\\em4nc\\OneDrive\\Desktop\\Python\\CrystalRET\\input_transcript"
-        self.alreadyProcessed = "C:\\Users\\em4nc\\OneDrive\\Desktop\\Python\\CrystalRET\\already_processed_transcripts"
+        base = _get_base_dir()
+        self.path             = os.path.join(base, "input_transcript")
+        self.alreadyProcessed = os.path.join(base, "already_processed_transcript")
+        os.makedirs(self.path, exist_ok=True)
+        os.makedirs(self.alreadyProcessed, exist_ok=True)
         self.dir_list = os.listdir(self.path)  #  Valutato all'istanza, non alla classe
         self.currentmodel = "mistral"
         self.prompt = "Find anything in this text that looks like an italian HAM Radio call-sign and only write that: "
@@ -27,7 +41,16 @@ class LocalOllama():
                 return True
         except requests.exceptions.ConnectionError:
             pass
-
+        
+        msg = QMessageBox()
+        msg.setWindowTitle("Ollama non trovato")
+        msg.setText("Ollama non è installato o non è raggiungibile.")
+        msg.setInformativeText("Vuoi aprire la pagina di download di Ollama?")
+        msg.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        if msg.exec() == QMessageBox.StandardButton.Yes:
+            webbrowser.open("https://ollama.com/download")
+        return False
+    
         # Ollama non risponde, prova ad avviarlo
         print("Ollama non raggiungibile, avvio in corso...")
         try:
@@ -70,4 +93,5 @@ class LocalOllama():
             self.currentmodel = model
         else:
             print("No such model available, please try again")    
+
 
