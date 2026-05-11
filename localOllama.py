@@ -49,7 +49,7 @@ class LocalOllama:
         msg.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         if msg.exec() == QMessageBox.StandardButton.Yes:
             webbrowser.open("https://ollama.com/download")
-        return False
+            return False
     
         # Ollama non risponde, prova ad avviarlo
         print("Ollama non raggiungibile, avvio in corso...")
