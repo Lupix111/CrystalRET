@@ -44,7 +44,7 @@ class LocalOllama:
         
         msg = QMessageBox()
         msg.setWindowTitle("Ollama non trovato")
-        msg.setText("Ollama non è installato o non è raggiungibile.")
+        msg.setText("Ollama non è installato o non è raggiungibile. Se ha installato Ollama ma non l'hai aperto chiudi questa finestra.")
         msg.setInformativeText("Vuoi aprire la pagina di download di Ollama?")
         msg.setStandardButtons(QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
         if msg.exec() == QMessageBox.StandardButton.Yes:

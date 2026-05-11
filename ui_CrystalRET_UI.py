@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'CrystalRET_UIPbwbjg.ui'
+## Form generated from reading UI file 'CrystalRET_UIPWWhPr.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.11.0
 ##
@@ -40,21 +40,38 @@ class Ui_MainWindow(object):
         self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
         self.pushButton_monitoraggio = QPushButton(self.groupBoxopzioni)
         self.pushButton_monitoraggio.setObjectName(u"pushButton_monitoraggio")
+        icon1 = QIcon()
+        icon1.addFile(u":/Main/recball_icon.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.pushButton_monitoraggio.setIcon(icon1)
+        self.pushButton_monitoraggio.setIconSize(QSize(20, 20))
 
         self.horizontalLayout_4.addWidget(self.pushButton_monitoraggio)
 
         self.pushButton_pausa = QPushButton(self.groupBoxopzioni)
         self.pushButton_pausa.setObjectName(u"pushButton_pausa")
+        self.pushButton_pausa.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
+        icon2 = QIcon()
+        icon2.addFile(u":/Main/pause_icon.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.pushButton_pausa.setIcon(icon2)
+        self.pushButton_pausa.setIconSize(QSize(20, 20))
 
         self.horizontalLayout_4.addWidget(self.pushButton_pausa)
 
         self.pushButton_esportalog = QPushButton(self.groupBoxopzioni)
         self.pushButton_esportalog.setObjectName(u"pushButton_esportalog")
+        icon3 = QIcon()
+        icon3.addFile(u":/Main/export_icon.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.pushButton_esportalog.setIcon(icon3)
+        self.pushButton_esportalog.setIconSize(QSize(20, 20))
 
         self.horizontalLayout_4.addWidget(self.pushButton_esportalog)
 
         self.pushButton_impostazioni = QPushButton(self.groupBoxopzioni)
         self.pushButton_impostazioni.setObjectName(u"pushButton_impostazioni")
+        icon4 = QIcon()
+        icon4.addFile(u":/Main/settings_icon.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.pushButton_impostazioni.setIcon(icon4)
+        self.pushButton_impostazioni.setIconSize(QSize(20, 20))
 
         self.horizontalLayout_4.addWidget(self.pushButton_impostazioni)
 
@@ -207,7 +224,7 @@ class Ui_MainWindow(object):
     # setupUi
 
     def retranslateUi(self, MainWindow):
-        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
+        MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"CrystalREC", None))
         self.groupBoxopzioni.setTitle(QCoreApplication.translate("MainWindow", u"Opzioni", None))
         self.pushButton_monitoraggio.setText(QCoreApplication.translate("MainWindow", u"Monitoraggio", None))
         self.pushButton_pausa.setText(QCoreApplication.translate("MainWindow", u"Pausa", None))
