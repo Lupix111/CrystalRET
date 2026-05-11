@@ -6,7 +6,7 @@ class options:
 
     def load(self):
         return {
-            "vad_threshold ":       self.qs.value("vad_threshold ", 500),
+            "vad_threshold ":       self.qs.value("vad_threshold", 0.5),
             "silenzio":     self.qs.value("silenzio", 2.0),
             "model_stt":    self.qs.value("model_stt", "tiny"),
             "model_ollama": self.qs.value("model_ollama", "mistral"),
